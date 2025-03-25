@@ -1,0 +1,116 @@
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\ProgrammeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\User;
+use App\Entity\Seance;
+use App\Entity\ProgrammeJour;
+
+#[ORM\Entity(repositoryClass: ProgrammeRepository::class)]
+#[ApiResource]
+class Programme
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\OneToMany(mappedBy: 'programme', targetEntity: ProgrammeJour::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $jours;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programmes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\OneToMany(mappedBy: 'programme', targetEntity: Seance::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $seances;
+
+    public function __construct()
+    {
+        $this->jours = new ArrayCollection();
+        $this->seances = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getJours(): Collection
+    {
+        return $this->jours;
+    }
+
+    public function addJour(ProgrammeJour $jour): static
+    {
+        if (!$this->jours->contains($jour)) {
+            $this->jours->add($jour);
+            $jour->setProgramme($this);
+        }
+        return $this;
+    }
+
+    public function removeJour(ProgrammeJour $jour): static
+    {
+        if ($this->jours->removeElement($jour)) {
+            if ($jour->getProgramme() === $this) {
+                $jour->setProgramme(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    public function getSeances(): Collection
+    {
+        return $this->seances;
+    }
+
+    public function addSeance(Seance $seance): static
+    {
+        if (!$this->seances->contains($seance)) {
+            $this->seances->add($seance);
+            $seance->setProgramme($this);
+        }
+        return $this;
+    }
+
+    public function removeSeance(Seance $seance): static
+    {
+        if ($this->seances->removeElement($seance)) {
+            if ($seance->getProgramme() === $this) {
+                $seance->setProgramme(null);
+            }
+        }
+        return $this;
+    }
+}
