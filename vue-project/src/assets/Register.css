@@ -1,0 +1,106 @@
+/* Styles globaux */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Container principal */
+.register-container {
+    background: url('@/assets/background.jpg') no-repeat center center/cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+/* Effet sombre sur le background */
+.register-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+/* Formulaire */
+.register-form {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Titre */
+.register-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Champs du formulaire */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 1rem;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: 0.3s ease-in-out;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Bouton */
+.register-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.register-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* Message d'erreur */
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    text-align: center;
+}

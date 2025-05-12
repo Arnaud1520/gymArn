@@ -7,11 +7,13 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,22 +23,22 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $poids = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $taille = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 10)]
     private ?string $sexe = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Seance::class)]
@@ -64,7 +66,6 @@ class User
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -76,7 +77,6 @@ class User
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -88,7 +88,6 @@ class User
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -97,10 +96,9 @@ class User
         return $this->phone;
     }
 
-    public function setPhone(string $phone): static
+    public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
-
         return $this;
     }
 
@@ -109,10 +107,9 @@ class User
         return $this->poids;
     }
 
-    public function setPoids(float $poids): static
+    public function setPoids(?float $poids): static
     {
         $this->poids = $poids;
-
         return $this;
     }
 
@@ -121,10 +118,9 @@ class User
         return $this->taille;
     }
 
-    public function setTaille(float $taille): static
+    public function setTaille(?float $taille): static
     {
         $this->taille = $taille;
-
         return $this;
     }
 
@@ -136,7 +132,6 @@ class User
     public function setSexe(string $sexe): static
     {
         $this->sexe = $sexe;
-
         return $this;
     }
 
@@ -151,7 +146,6 @@ class User
             $this->seances->add($seance);
             $seance->setUser($this);
         }
-
         return $this;
     }
 
@@ -162,7 +156,6 @@ class User
                 $seance->setUser(null);
             }
         }
-
         return $this;
     }
 
@@ -177,7 +170,6 @@ class User
             $this->programmes->add($programme);
             $programme->setUser($this);
         }
-
         return $this;
     }
 
@@ -188,7 +180,23 @@ class User
                 $programme->setUser(null);
             }
         }
-
         return $this;
+    }
+
+    // Implémentation de UserInterface
+
+    public function getRoles(): array
+    {
+        return ['ROLE_USER']; // Ajoute des rôles si besoin
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Rien à faire ici pour l'instant
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }
