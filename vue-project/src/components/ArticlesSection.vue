@@ -62,7 +62,7 @@
   .articles {
     position: relative;
     padding: 100px 40px 60px;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('@/assets/bg2.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('@/assets/registerbg.jpg');
     background-size: cover;
     background-position: center;
     color: white;

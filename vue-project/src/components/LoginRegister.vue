@@ -129,7 +129,7 @@ import { useRouter } from 'vue-router';
       });
   
       localStorage.setItem('token', response.data.token);
-      router.push('/dashboard');
+      router.push('/');
     } catch (error) {
       errorMessage.value = 'Identifiants incorrects';
     }
@@ -158,7 +158,7 @@ import { useRouter } from 'vue-router';
       errorMessage.value = '';
   
       setTimeout(() => {
-        router.push({ name: 'Dashboard', params: { name: registeredName } });
+        router.push({ name: 'home', params: { name: registeredName } });
       }, 1500);
   
     } catch (error) {
