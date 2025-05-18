@@ -4,36 +4,38 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\SeanceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Programme;  // Ajout de l'entité Programme
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Programme;
+use App\Entity\User;
 
 #[ORM\Entity(repositoryClass: SeanceRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['seance:read']],
+    denormalizationContext: ['groups' => ['seance:write']]
+)]
 class Seance
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['seance:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['seance:read'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'seances')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['seance:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Programme::class, inversedBy: 'seances')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Programme $programme = null;  // Ajout de la relation Programme
-
-    public function __construct()
-    {
-        // Aucune collection pour exercices ici
-    }
+    #[Groups(['seance:read'])]
+    private ?Programme $programme = null;
 
     public function getId(): ?int
     {

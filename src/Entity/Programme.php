@@ -7,20 +7,26 @@ use App\Repository\ProgrammeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User;
 use App\Entity\Seance;
 use App\Entity\ProgrammeJour;
 
 #[ORM\Entity(repositoryClass: ProgrammeRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['programme:read', 'seance:read']],
+    denormalizationContext: ['groups' => ['programme:write']]
+)]
 class Programme
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['programme:read', 'seance:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['programme:read', 'seance:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'programme', targetEntity: ProgrammeJour::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
