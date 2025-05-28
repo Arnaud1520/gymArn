@@ -26,7 +26,6 @@ class ProgrammeController extends AbstractController
     public function show(Programme $programme, SerializerInterface $serializer): JsonResponse
     {
         $json = $serializer->serialize($programme, 'json', ['groups' => 'programme:read']);
-
         return new JsonResponse($json, 200, [], true);
     }
 
@@ -37,13 +36,12 @@ class ProgrammeController extends AbstractController
 
         $programme = new Programme();
         $programme->setName($data['name'] ?? '');
-        $programme->setUser($this->getUser()); // ou autre logique si User est associé
+        $programme->setUser($this->getUser());
 
         $em->persist($programme);
         $em->flush();
 
         $json = $serializer->serialize($programme, 'json', ['groups' => 'programme:read']);
-
         return new JsonResponse($json, 201, [], true);
     }
 
@@ -59,7 +57,6 @@ class ProgrammeController extends AbstractController
         $em->flush();
 
         $json = $serializer->serialize($programme, 'json', ['groups' => 'programme:read']);
-
         return new JsonResponse($json, 200, [], true);
     }
 

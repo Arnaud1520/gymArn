@@ -4,7 +4,7 @@
   
       <nav class="nav">
         <ul :class="{ 'is-open': isNavOpen }">
-          <li><a href="#">Accueil</a></li>
+          <li><a href="/">Accueil</a></li>
           <li><a href="#">À propos</a></li>
           <li><a href="/dashboard">Dashboard</a></li>
           <li><a href="#">Contact</a></li>

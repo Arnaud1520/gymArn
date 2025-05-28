@@ -2,6 +2,7 @@
   <div class="dashboard">
     <HeaderSection />
     <DashboardProfile />
+    <Programmes />
     <SeanceCalendar />
     <FooterSection />
   </div>
@@ -15,6 +16,9 @@ import DashboardProfile from '@/components/Dashboard/DashboardProfile.vue'
 import SeanceCalendar from '@/components/Dashboard/SeanceCalendar.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import HeaderSection from '@/components/HeaderSection.vue'
+
+// Import du nouveau composant Programmes
+import Programmes from '@/components/Dashboard/Programme.vue'
 
 // 🔒 Vérification de la connexion
 onMounted(async () => {
