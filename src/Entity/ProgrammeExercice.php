@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProgrammeExerciceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProgrammeExerciceRepository::class)]
 #[ApiResource]
@@ -21,15 +22,19 @@ class ProgrammeExercice
 
     #[ORM\ManyToOne(targetEntity: Exercice::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['programme:read'])]
     private ?Exercice $exercice = null;
 
     #[ORM\Column]
+    #[Groups(['programme:read'])]
     private ?int $series = null;
 
     #[ORM\Column]
+    #[Groups(['programme:read'])]
     private ?int $repetitions = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['programme:read'])]
     private ?float $poids = null;
 
     public function getId(): ?int

@@ -22,7 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['seance:read'])]
+    #[Groups(['seance:read', 'programme:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, unique: true)]

@@ -2,8 +2,8 @@
   <div class="dashboard">
     <HeaderSection />
     <DashboardProfile />
-    <Programmes />
     <SeanceCalendar />
+    <Programmes />
     <FooterSection />
   </div>
 </template>

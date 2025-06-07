@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User;
 use App\Entity\Seance;
 use App\Entity\ProgrammeJour;
+use App\Entity\ProgrammeExercice;
 
 #[ORM\Entity(repositoryClass: ProgrammeRepository::class)]
 #[ApiResource(
@@ -29,11 +30,16 @@ class Programme
     #[Groups(['programme:read', 'seance:read'])]
     private ?string $name = null;
 
+    #[ORM\OneToMany(mappedBy: 'programme', targetEntity: ProgrammeExercice::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups(['programme:read'])]
+    private Collection $programmeExercices;
+
     #[ORM\OneToMany(mappedBy: 'programme', targetEntity: ProgrammeJour::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $jours;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programmes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['programme:read'])]
     private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'programme', targetEntity: Seance::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -43,6 +49,7 @@ class Programme
     {
         $this->jours = new ArrayCollection();
         $this->seances = new ArrayCollection();
+        $this->programmeExercices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -58,6 +65,34 @@ class Programme
     public function setName(string $name): static
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProgrammeExercice[]
+     */
+    public function getProgrammeExercices(): Collection
+    {
+        return $this->programmeExercices;
+    }
+
+    public function addProgrammeExercice(ProgrammeExercice $programmeExercice): static
+    {
+        if (!$this->programmeExercices->contains($programmeExercice)) {
+            $this->programmeExercices->add($programmeExercice);
+            $programmeExercice->setProgramme($this);
+        }
+        return $this;
+    }
+
+    public function removeProgrammeExercice(ProgrammeExercice $programmeExercice): static
+    {
+        if ($this->programmeExercices->removeElement($programmeExercice)) {
+            // set the owning side to null (unless already changed)
+            if ($programmeExercice->getProgramme() === $this) {
+                $programmeExercice->setProgramme(null);
+            }
+        }
         return $this;
     }
 
