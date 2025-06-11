@@ -2,6 +2,23 @@
   <div class="container">
     <h2 class="title">Liste des séances</h2>
 
+    <button @click="toggleForm" class="add-btn">
+      Ajouter une séance
+    </button>
+
+    <div v-if="showForm" class="add-form">
+      <select v-model="selectedProgrammeId">
+        <option disabled value="">Sélectionnez un programme</option>
+        <option v-for="programme in programmes" :key="programme.id" :value="programme.id">
+          {{ programme.name }}
+        </option>
+      </select>
+
+      <input type="datetime-local" v-model="selectedDate" />
+
+      <button @click="ajouterSeance" class="submit-btn">Valider</button>
+    </div>
+
     <input
       v-model="searchQuery"
       type="text"
@@ -70,6 +87,59 @@ const router = useRouter()
 const currentPage = ref(1)
 const itemsPerPage = 5
 
+const showForm = ref(false)
+const selectedProgrammeId = ref('')
+const selectedDate = ref('')
+
+function toggleForm() {
+  showForm.value = !showForm.value
+}
+
+async function ajouterSeance() {
+  if (!selectedProgrammeId.value || !selectedDate.value) {
+    alert("Veuillez sélectionner un programme et une date.")
+    return
+  }
+
+  const token = localStorage.getItem('token')
+  const userId = localStorage.getItem('userId')
+
+  if (!userId) {
+    console.error("❌ Aucun userId trouvé dans le localStorage.")
+    alert("Utilisateur non connecté. Veuillez vous reconnecter.")
+    return
+  }
+
+  console.log("✅ userId localStorage :", userId)
+
+  const formattedDate = new Date(selectedDate.value).toISOString().slice(0, 19)
+
+  const payload = {
+    programme: `/api/programmes/${selectedProgrammeId.value}`,
+    user: `/api/users/${userId}`,
+    date: formattedDate
+  }
+
+  console.log("📦 Payload envoyé :", JSON.stringify(payload, null, 2))
+
+  try {
+    await axios.post('http://localhost:8000/api/seances', payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    alert("Séance ajoutée avec succès !")
+    selectedProgrammeId.value = ''
+    selectedDate.value = ''
+    showForm.value = false
+  } catch (error) {
+    console.error("❌ Erreur lors de l'ajout de la séance :", error)
+    alert("Échec de l'ajout.")
+  }
+}
+
 onMounted(async () => {
   const token = localStorage.getItem('token')
   try {
@@ -97,7 +167,7 @@ function sortBy(key) {
     sortKey.value = key
     sortOrder.value = 'asc'
   }
-  currentPage.value = 1 // reset to page 1 when sorting
+  currentPage.value = 1
 }
 
 const filteredAndSortedProgrammes = computed(() => {
@@ -151,6 +221,7 @@ function prevPage() {
 }
 </script>
 
+
 <style scoped>
 .container {
   max-width: 800px;
@@ -167,6 +238,50 @@ function prevPage() {
   color: #0a0a0a;
   margin-bottom: 1.5rem;
   text-align: center;
+}
+
+.add-btn {
+  background-color: #10b981;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.add-btn:hover {
+  background-color: #059669;
+}
+
+.add-form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.add-form select,
+.add-form input {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.submit-btn {
+  background-color: #10b981;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover {
+  background-color: #059669;
 }
 
 .search-bar {

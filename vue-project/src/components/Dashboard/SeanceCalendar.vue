@@ -3,39 +3,37 @@
     <FullCalendar :options="calendarOptions" />
 
     <!-- Modal -->
-<div v-if="selectedSeance" class="modal-overlay">
-  <div class="modal-content">
-    <button
-      @click="selectedSeance = null"
-      class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-lg font-bold"
-    >
-      ✕
-    </button>
+    <div v-if="selectedSeance" class="modal-overlay">
+      <div class="modal-content">
+        <button
+          @click="selectedSeance = null"
+          class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-lg font-bold"
+        >
+          ✕
+        </button>
 
-    <h2 class="text-xl font-semibold mb-4">Détails de la séance</h2>
-    <p><strong>Programme :</strong> {{ selectedSeance.programme.name }}</p>
-    <p><strong>Description :</strong> {{ selectedSeance.programme.description }}</p>
-    <p><strong>Auteur :</strong> {{ selectedSeance.user.name }}</p>
-    <p><strong>Date :</strong> {{ formatDateFr(selectedSeance.date) }}</p>
+        <h2 class="text-xl font-semibold mb-4">Détails de la séance</h2>
+        <p><strong>Programme :</strong> {{ selectedSeance.programme.name }}</p>
+        <p><strong>Description :</strong> {{ selectedSeance.programme.description }}</p>
+        <p><strong>Auteur :</strong> {{ selectedSeance.user.name }}</p>
+        <p><strong>Date :</strong> {{ formatDateFr(selectedSeance.date) }}</p>
 
-
-    <div class="mt-6 flex justify-between">
-      <router-link
-        :to="`/programme/${selectedSeance.programme.id}`"
-        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Détail du programme
-      </router-link>
-      <button
-        @click="inscrireASeance"
-        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-      >
-        S'inscrire
-      </button>
+        <div class="mt-6 flex justify-between">
+          <router-link
+            :to="`/programme/${selectedSeance.programme.id}`"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Détail du programme
+          </router-link>
+          <button
+            @click="inscrireASeance"
+            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            S'inscrire
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
   </div>
 </template>
 
@@ -70,7 +68,7 @@ const calendarOptions = ref({
 
 const formatDateFr = (isoDate) => {
   return new Date(isoDate).toLocaleString('fr-FR', {
-    weekday: 'long', // lundi, mardi...
+    weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -79,7 +77,6 @@ const formatDateFr = (isoDate) => {
     hour12: false,
   })
 }
-
 
 const inscrireASeance = async () => {
   const token = localStorage.getItem('token')
@@ -106,16 +103,32 @@ onMounted(async () => {
   const token = localStorage.getItem('token')
 
   try {
+    // Étape 1 : récupérer l'utilisateur connecté
+    const me = await axios.get('http://localhost:8000/api/user/me', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    const userId = me.data.id
+
+    // Étape 2 : récupérer toutes les séances
     const response = await axios.get('http://localhost:8000/api/seances', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
 
-    seances.value = response.data.member.map(seance => ({
+    // Étape 3 : filtrer uniquement les séances créées par l'utilisateur
+    const filteredSeances = response.data.member.filter(
+      seance => seance.user.id === userId
+    )
+
+    // Étape 4 : formatter les séances pour FullCalendar
+    seances.value = filteredSeances.map(seance => ({
       title: `<strong>• ${seance.user.name}<br>• ${seance.programme.name}<br>• ${formatDateFr(seance.date)}</strong>`,
       start: seance.date,
-      seanceData: seance
+      seanceData: seance,
     }))
 
     calendarOptions.value.events = seances.value
@@ -145,5 +158,4 @@ onMounted(async () => {
   position: relative;
   z-index: 1001;
 }
-
 </style>

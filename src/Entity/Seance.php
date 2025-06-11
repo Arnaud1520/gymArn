@@ -24,17 +24,17 @@ class Seance
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['seance:read'])]
+    #[Groups(['seance:read', 'seance:write'])] // <-- Ajouté ici
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'seances')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['seance:read'])]
+    #[Groups(['seance:read', 'seance:write'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Programme::class, inversedBy: 'seances')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['seance:read'])]
+    #[Groups(['seance:read', 'seance:write'])] // <-- Ajouté ici
     private ?Programme $programme = null;
 
     public function getId(): ?int
