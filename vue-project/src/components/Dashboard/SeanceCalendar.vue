@@ -83,7 +83,7 @@ const inscrireASeance = async () => {
   try {
     await axios.post(
       `http://localhost:8000/api/inscriptions`,
-      { seance: `/api/seances/${selectedSeance.value.id}` },
+      { seance: `/api/seance/${selectedSeance.value.id}` },
       {
         headers: {
           Authorization: `Bearer ${token}`,

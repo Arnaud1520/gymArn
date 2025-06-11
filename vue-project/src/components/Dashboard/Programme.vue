@@ -115,15 +115,16 @@ async function ajouterSeance() {
   const formattedDate = new Date(selectedDate.value).toISOString().slice(0, 19)
 
   const payload = {
-    programme: `/api/programmes/${selectedProgrammeId.value}`,
-    user: `/api/users/${userId}`,
-    date: formattedDate
-  }
+  programmeId: selectedProgrammeId.value,
+  userId: userId,
+  date: formattedDate
+}
+
 
   console.log("📦 Payload envoyé :", JSON.stringify(payload, null, 2))
 
   try {
-    await axios.post('http://localhost:8000/api/seances', payload, {
+    await axios.post('http://localhost:8000/api/seance', payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'

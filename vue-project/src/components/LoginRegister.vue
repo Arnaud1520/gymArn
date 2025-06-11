@@ -121,19 +121,33 @@ import { useRouter } from 'vue-router';
     return password.value && confirmPassword.value && password.value !== confirmPassword.value;
   });
   
-  const login = async () => {
-    try {
-      const response = await axios.post('http://localhost:8000/api/login', {
-        email: email.value,
-        password: password.value,
-      });
-  
-      localStorage.setItem('token', response.data.token);
-      router.push('/');
-    } catch (error) {
-      errorMessage.value = 'Identifiants incorrects';
-    }
-  };
+const login = async () => {
+  try {
+    const response = await axios.post('http://localhost:8000/api/login', {
+      email: email.value,
+      password: password.value,
+    });
+
+    localStorage.setItem('token', response.data.token);
+
+    // Récupérer les infos utilisateur
+    const userRes = await axios.get('http://localhost:8000/api/user/me', {
+      headers: {
+        Authorization: `Bearer ${response.data.token}`
+      }
+    });
+
+    localStorage.setItem('userId', userRes.data.id);
+    localStorage.setItem('userName', userRes.data.name);
+    // Tu peux stocker plus si tu veux
+
+    router.push('/');
+  } catch (error) {
+    errorMessage.value = 'Identifiants incorrects';
+  }
+};
+
+
   
   const registerUser = async () => {
     if (passwordMismatch.value) {
