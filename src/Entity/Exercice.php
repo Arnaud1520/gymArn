@@ -11,7 +11,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: ExerciceRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['programme:read']],
+)]
 class Exercice
 {
     #[ORM\Id]

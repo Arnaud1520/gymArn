@@ -15,7 +15,6 @@
         <h2 class="text-xl font-semibold mb-4">Détails de la séance</h2>
         <p><strong>Programme :</strong> {{ selectedSeance.programme.name }}</p>
         <p><strong>Description :</strong> {{ selectedSeance.programme.description }}</p>
-        <p><strong>Auteur :</strong> {{ selectedSeance.user.name }}</p>
         <p><strong>Date :</strong> {{ formatDateFr(selectedSeance.date) }}</p>
 
         <div class="mt-6 flex justify-between">
@@ -44,8 +43,8 @@ import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-const seances = ref([])
 const selectedSeance = ref(null)
+const calendarEvents = ref([]) // 🔁 Événements réactifs
 const router = useRouter()
 
 const calendarOptions = ref({
@@ -56,13 +55,12 @@ const calendarOptions = ref({
     center: 'title',
     right: 'dayGridMonth',
   },
-  events: [],
+  events: calendarEvents, // 🟢 Utilise une ref réactive ici
   eventContent: function (arg) {
     return { html: arg.event.title }
   },
   eventClick: function (info) {
-    const seanceData = info.event.extendedProps.seanceData
-    selectedSeance.value = seanceData
+    selectedSeance.value = info.event.extendedProps.seanceData
   },
 })
 
@@ -83,7 +81,7 @@ const inscrireASeance = async () => {
   try {
     await axios.post(
       `http://localhost:8000/api/inscriptions`,
-      { seance: `/api/seance/${selectedSeance.value.id}` },
+      { seance: `/api/seances/${selectedSeance.value.id}` },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -103,35 +101,32 @@ onMounted(async () => {
   const token = localStorage.getItem('token')
 
   try {
-    // Étape 1 : récupérer l'utilisateur connecté
     const me = await axios.get('http://localhost:8000/api/user/me', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-
     const userId = me.data.id
 
-    // Étape 2 : récupérer toutes les séances
     const response = await axios.get('http://localhost:8000/api/seances', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
 
-    // Étape 3 : filtrer uniquement les séances créées par l'utilisateur
+    console.log('Séances reçues :', response.data.member)
+
+    // ✅ Filtrer uniquement les séances créées par l'utilisateur connecté
     const filteredSeances = response.data.member.filter(
-      seance => seance.user.id === userId
+      (seance) => seance.user.id === userId
     )
 
-    // Étape 4 : formatter les séances pour FullCalendar
-    seances.value = filteredSeances.map(seance => ({
-      title: `<strong>• ${seance.user.name}<br>• ${seance.programme.name}<br>• ${formatDateFr(seance.date)}</strong>`,
+    // ✅ Mapper pour FullCalendar
+    calendarEvents.value = filteredSeances.map((seance) => ({
+      title: `<strong>• ${seance.programme.name}<br>• ${formatDateFr(seance.date)}</strong>`,
       start: seance.date,
       seanceData: seance,
     }))
-
-    calendarOptions.value.events = seances.value
   } catch (error) {
     console.error('Erreur lors du chargement des séances :', error)
   }

@@ -22,19 +22,19 @@ class ProgrammeExercice
 
     #[ORM\ManyToOne(targetEntity: Exercice::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['programme:read'])]
+    #[Groups(['programme:read', 'programme:write'])]
     private ?Exercice $exercice = null;
 
     #[ORM\Column]
-    #[Groups(['programme:read'])]
+    #[Groups(['programme:read', 'programme:write'])]
     private ?int $series = null;
 
     #[ORM\Column]
-    #[Groups(['programme:read'])]
+    #[Groups(['programme:read', 'programme:write'])]
     private ?int $repetitions = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['programme:read'])]
+    #[Groups(['programme:read', 'programme:write'])]
     private ?float $poids = null;
 
     public function getId(): ?int

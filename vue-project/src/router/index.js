@@ -1,7 +1,7 @@
-import LoginRegister from '@/components/LoginRegister.vue'
-import { createRouter, createWebHistory } from 'vue-router'
-import Dashboard from '../views/Dashboard.vue'
-import Home from '../views/Home.vue'
+import LoginRegister from '@/components/LoginRegister.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import Dashboard from '../views/Dashboard.vue';
+import Home from '../views/Home.vue';
 import ProgrammeDetail from '../views/ProgrammeDetail.vue'; // Import du composant détail
 
 const routes = [
@@ -14,6 +14,12 @@ const routes = [
     component: ProgrammeDetail,
     props: true               // Pour passer le paramètre id en prop au composant
   },
+  {
+  path: '/ajouter-programme',
+  name: 'AjouterProgramme',
+  component: () => import('@/views/AjouterProgramme.vue')
+}
+
 ]
 
 const router = createRouter({

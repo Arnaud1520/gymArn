@@ -27,11 +27,11 @@ class Programme
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['programme:read', 'seance:read'])]
+    #[Groups(['programme:read', 'seance:read', 'programme:write'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'programme', targetEntity: ProgrammeExercice::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[Groups(['programme:read'])]
+    #[Groups(['programme:read', 'programme:write'])]
     private Collection $programmeExercices;
 
     #[ORM\OneToMany(mappedBy: 'programme', targetEntity: ProgrammeJour::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -39,7 +39,7 @@ class Programme
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programmes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['programme:read'])]
+    #[Groups(['programme:read', 'programme:write'])]
     private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'programme', targetEntity: Seance::class, cascade: ['persist', 'remove'], orphanRemoval: true)]

@@ -2,9 +2,15 @@
   <div class="container">
     <h2 class="title">Liste des séances</h2>
 
-    <button @click="toggleForm" class="add-btn">
-      Ajouter une séance
-    </button>
+    <div class="button-group">
+      <button @click="toggleForm" class="add-btn">
+        Ajouter une séance
+      </button>
+
+      <button @click="goToAddProgramme" class="add-btn secondary">
+        Ajouter un programme
+      </button>
+    </div>
 
     <div v-if="showForm" class="add-form">
       <select v-model="selectedProgrammeId">
@@ -95,6 +101,10 @@ function toggleForm() {
   showForm.value = !showForm.value
 }
 
+function goToAddProgramme() {
+  router.push('/ajouter-programme') // <- adapte ce chemin si besoin
+}
+
 async function ajouterSeance() {
   if (!selectedProgrammeId.value || !selectedDate.value) {
     alert("Veuillez sélectionner un programme et une date.")
@@ -110,18 +120,13 @@ async function ajouterSeance() {
     return
   }
 
-  console.log("✅ userId localStorage :", userId)
-
   const formattedDate = new Date(selectedDate.value).toISOString().slice(0, 19)
 
   const payload = {
-  programmeId: selectedProgrammeId.value,
-  userId: userId,
-  date: formattedDate
-}
-
-
-  console.log("📦 Payload envoyé :", JSON.stringify(payload, null, 2))
+    programmeId: selectedProgrammeId.value,
+    userId: userId,
+    date: formattedDate
+  }
 
   try {
     await axios.post('http://localhost:8000/api/seance', payload, {
@@ -222,7 +227,6 @@ function prevPage() {
 }
 </script>
 
-
 <style scoped>
 .container {
   max-width: 800px;
@@ -241,6 +245,12 @@ function prevPage() {
   text-align: center;
 }
 
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
 .add-btn {
   background-color: #10b981;
   color: white;
@@ -249,12 +259,19 @@ function prevPage() {
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  margin-bottom: 1rem;
   transition: background-color 0.2s ease;
+}
+
+.add-btn.secondary {
+  background-color: #3b82f6;
 }
 
 .add-btn:hover {
   background-color: #059669;
+}
+
+.add-btn.secondary:hover {
+  background-color: #2563eb;
 }
 
 .add-form {
