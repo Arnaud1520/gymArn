@@ -14,7 +14,6 @@
 
         <h2 class="text-xl font-semibold mb-4">Détails de la séance</h2>
         <p><strong>Programme :</strong> {{ selectedSeance.programme.name }}</p>
-        <p><strong>Description :</strong> {{ selectedSeance.programme.description }}</p>
         <p><strong>Date :</strong> {{ formatDateFr(selectedSeance.date) }}</p>
 
         <div class="mt-6 flex justify-between">
@@ -36,15 +35,16 @@
   </div>
 </template>
 
+
 <script setup>
 import dayGridPlugin from '@fullcalendar/daygrid'
 import FullCalendar from '@fullcalendar/vue3'
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
 const selectedSeance = ref(null)
-const calendarEvents = ref([]) // 🔁 Événements réactifs
+const calendarEvents = ref([])
 const router = useRouter()
 
 const calendarOptions = ref({
@@ -55,13 +55,18 @@ const calendarOptions = ref({
     center: 'title',
     right: 'dayGridMonth',
   },
-  events: calendarEvents, // 🟢 Utilise une ref réactive ici
+  events: calendarEvents.value, // ✅ tableau directement
   eventContent: function (arg) {
     return { html: arg.event.title }
   },
   eventClick: function (info) {
     selectedSeance.value = info.event.extendedProps.seanceData
   },
+})
+
+// 🔁 Met à jour automatiquement les events dans FullCalendar si calendarEvents change
+watchEffect(() => {
+  calendarOptions.value.events = calendarEvents.value
 })
 
 const formatDateFr = (isoDate) => {
@@ -114,24 +119,26 @@ onMounted(async () => {
       },
     })
 
-    console.log('Séances reçues :', response.data.member)
-
-    // ✅ Filtrer uniquement les séances créées par l'utilisateur connecté
     const filteredSeances = response.data.member.filter(
-      (seance) => seance.user.id === userId
+      (seance) => seance.user['@id'] === `/api/users/${userId}`
     )
 
-    // ✅ Mapper pour FullCalendar
+    console.log("🎯 Séances filtrées :", filteredSeances)
+
     calendarEvents.value = filteredSeances.map((seance) => ({
-      title: `<strong>• ${seance.programme.name}<br>• ${formatDateFr(seance.date)}</strong>`,
+      title: `• ${seance.programme.name}`,
       start: seance.date,
       seanceData: seance,
     }))
+
+    console.log("✅ Événements à injecter dans FullCalendar :", calendarEvents.value)
   } catch (error) {
     console.error('Erreur lors du chargement des séances :', error)
   }
 })
 </script>
+
+
 
 <style scoped>
 .modal-overlay {
