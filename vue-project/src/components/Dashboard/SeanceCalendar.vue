@@ -1,39 +1,35 @@
 <template>
-  <div>
-    <FullCalendar :options="calendarOptions" />
+  <div class="calendar-wrapper">
+    <FullCalendar :options="calendarOptions" class="custom-calendar" />
 
     <!-- Modal -->
     <div v-if="selectedSeance" class="modal-overlay">
       <div class="modal-content">
         <button
           @click="selectedSeance = null"
-          class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-lg font-bold"
+          class="close-button"
         >
           ✕
         </button>
 
-        <h2 class="text-xl font-semibold mb-4">Détails de la séance</h2>
+        <h2 class="modal-title">Détails de la séance</h2>
         <p><strong>Programme :</strong> {{ selectedSeance.programme.name }}</p>
         <p><strong>Date :</strong> {{ formatDateFr(selectedSeance.date) }}</p>
 
-        <div class="mt-6 flex justify-between">
+        <div class="modal-actions">
           <router-link
             :to="`/programme/${selectedSeance.programme.id}`"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            class="btn-link"
           >
             Détail du programme
           </router-link>
-          <button
-            @click="inscrireASeance"
-            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
-            S'inscrire
-          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+
 
 
 <script setup>
@@ -55,7 +51,7 @@ const calendarOptions = ref({
     center: 'title',
     right: 'dayGridMonth',
   },
-  events: calendarEvents.value, // ✅ tableau directement
+  events: calendarEvents.value,
   eventContent: function (arg) {
     return { html: arg.event.title }
   },
@@ -64,7 +60,6 @@ const calendarOptions = ref({
   },
 })
 
-// 🔁 Met à jour automatiquement les events dans FullCalendar si calendarEvents change
 watchEffect(() => {
   calendarOptions.value.events = calendarEvents.value
 })
@@ -79,27 +74,6 @@ const formatDateFr = (isoDate) => {
     minute: '2-digit',
     hour12: false,
   })
-}
-
-const inscrireASeance = async () => {
-  const token = localStorage.getItem('token')
-  try {
-    await axios.post(
-      `http://localhost:8000/api/inscriptions`,
-      { seance: `/api/seances/${selectedSeance.value.id}` },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/ld+json',
-        },
-      }
-    )
-    alert('Inscription réussie !')
-    selectedSeance.value = null
-  } catch (error) {
-    console.error("Erreur lors de l'inscription :", error)
-    alert("Une erreur est survenue lors de l'inscription.")
-  }
 }
 
 onMounted(async () => {
@@ -140,6 +114,7 @@ onMounted(async () => {
 
 
 
+
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -160,4 +135,86 @@ onMounted(async () => {
   position: relative;
   z-index: 1001;
 }
+
+.calendar-wrapper {
+  max-width: 100%; /* au lieu de 800px */
+  width: 100%;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.custom-calendar :deep(.fc) {
+  font-size: 14px;
+}
+
+.custom-calendar :deep(.fc-toolbar-title) {
+  font-size: 1.25rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.close-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #888;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #e53e3e;
+}
+
+.modal-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-link {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.btn-link:hover {
+  background-color: #1e40af;
+}
+
 </style>
