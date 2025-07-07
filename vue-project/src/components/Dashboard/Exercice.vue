@@ -138,7 +138,6 @@ async function fetchExercices() {
       headers: { Authorization: `Bearer ${token}` },
     })
     exercices.value = response.data.member ?? response.data
-    console.log("aaa", exercices.value)
   } catch (error) {
     console.error('Erreur lors du chargement des exercices :', error)
   } finally {
@@ -149,7 +148,6 @@ async function fetchExercices() {
 onMounted(fetchExercices)
 
 function voirDetails(id) {
-  console.log('ID à passer à la route :', id)
   router.push(`/exercice/${id}`)
 }
 
@@ -207,15 +205,12 @@ function prevPage() {
 }
 </script>
 
-
-
-
 <style scoped>
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
@@ -230,8 +225,10 @@ function prevPage() {
 
 .button-group {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
+  justify-content: center;
 }
 
 .add-btn {
@@ -245,27 +242,20 @@ function prevPage() {
   transition: background-color 0.2s ease;
 }
 
-.add-btn.secondary {
-  background-color: #3b82f6;
-}
-
 .add-btn:hover {
   background-color: #059669;
 }
 
-.add-btn.secondary:hover {
-  background-color: #2563eb;
-}
-
 .add-form {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
-  align-items: center;
   margin-bottom: 1.5rem;
 }
 
-.add-form select,
 .add-form input {
+  flex: 1 1 100%;
+  min-width: 100px;
   padding: 0.5rem;
   border-radius: 6px;
   border: 1px solid #d1d5db;
@@ -310,16 +300,16 @@ function prevPage() {
   border: 1px solid #e5e7eb;
 }
 
-.programme-table thead {
-  background-color: #f0f4ff;
-}
-
 .programme-table th,
 .programme-table td {
   padding: 1rem;
   text-align: left;
   border-bottom: 1px solid #e5e7eb;
   color: #111827;
+}
+
+.programme-table thead {
+  background-color: #f0f4ff;
 }
 
 .programme-table tr:hover {
@@ -360,6 +350,7 @@ function prevPage() {
   align-items: center;
   gap: 1rem;
   margin-top: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .pagination button {
@@ -376,6 +367,30 @@ function prevPage() {
   background-color: #93c5fd;
   cursor: not-allowed;
 }
+
+@media screen and (max-width: 600px) {
+  .add-form {
+    flex-direction: column;
+  }
+
+  .programme-table th,
+  .programme-table td {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  .add-btn,
+  .submit-btn,
+  .action-btn {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .pagination {
+    flex-direction: column;
+  }
+}
+
 
 .container {
   max-width: 800px;
@@ -424,3 +439,25 @@ function prevPage() {
   background-color: #3b82f6;
 }
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

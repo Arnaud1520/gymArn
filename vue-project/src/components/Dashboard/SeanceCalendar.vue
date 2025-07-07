@@ -5,12 +5,7 @@
     <!-- Modal -->
     <div v-if="selectedSeance" class="modal-overlay">
       <div class="modal-content">
-        <button
-          @click="selectedSeance = null"
-          class="close-button"
-        >
-          ✕
-        </button>
+        <button @click="selectedSeance = null" class="close-button">✕</button>
 
         <h2 class="modal-title">Détails de la séance</h2>
         <p><strong>Programme :</strong> {{ selectedSeance.programme.name }}</p>
@@ -23,14 +18,15 @@
           >
             Détail du programme
           </router-link>
+
+          <button @click="deleteSeance" class="btn-delete">
+            🗑 Supprimer
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-
-
 
 <script setup>
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -74,6 +70,33 @@ const formatDateFr = (isoDate) => {
     minute: '2-digit',
     hour12: false,
   })
+}
+
+const deleteSeance = async () => {
+  if (!selectedSeance.value) return
+
+  const confirmDelete = confirm("Es-tu sûr de vouloir supprimer cette séance ?")
+  if (!confirmDelete) return
+
+  const token = localStorage.getItem('token')
+
+  try {
+    await axios.delete(`http://localhost:8000/api/seances/${selectedSeance.value.id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    // Supprime de la liste d'événements
+    calendarEvents.value = calendarEvents.value.filter(
+      (event) => event.seanceData.id !== selectedSeance.value.id
+    )
+
+    selectedSeance.value = null // Ferme la modale
+  } catch (error) {
+    console.error("Erreur lors de la suppression de la séance :", error)
+    alert("La suppression a échoué.")
+  }
 }
 
 onMounted(async () => {
@@ -211,6 +234,7 @@ onMounted(async () => {
   margin-top: 2rem;
   display: flex;
   justify-content: flex-end;
+  gap: 1rem;
 }
 
 .btn-link {
@@ -224,7 +248,21 @@ onMounted(async () => {
 }
 
 .btn-link:hover {
-  background-color: #3668E8;
+  background-color: #2e5ed1;
+}
+
+.btn-delete {
+  background-color: #d9534f;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #c9302c;
 }
 </style>
-

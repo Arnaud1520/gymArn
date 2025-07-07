@@ -1,5 +1,5 @@
 <template>
-  
+  <HeaderSection />
   <div v-if="programme" class="programme-page">
     <h1>{{ programme.name }}</h1>
 
@@ -41,10 +41,13 @@
 </template>
 
 <script>
+import HeaderSection from '@/components/HeaderSection.vue'
 import axios from 'axios'
 
-
 export default {
+  components: {
+    HeaderSection
+  },
   data() {
     return {
       programme: null,
@@ -125,7 +128,7 @@ export default {
   color: #2c3e50;
   padding: 20px;
   max-width: 900px;
-  margin: 30px auto;
+  margin: 100px auto 30px;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
