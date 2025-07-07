@@ -314,5 +314,55 @@ const login = async () => {
     color: green;
     margin-top: 10px;
   }
+
+  @media (max-width: 768px) {
+  .login-register-container {
+    flex-direction: column;
+  }
+
+  .left-side {
+    display: none; 
+  }
+
+  .right-side {
+    flex: none;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .button-container {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .button-container .btn {
+    width: 80%;
+    font-size: 1rem;
+  }
+
+  .form-columns {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-container {
+    padding: 10px;
+  }
+
+  .submit-button {
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .logo-halter {
+    width: 80px;
+  }
+
+  .gymarn-logo {
+    font-size: 1.5rem;
+  }
+}
+
   </style>
   

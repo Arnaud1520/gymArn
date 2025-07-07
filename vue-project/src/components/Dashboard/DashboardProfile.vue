@@ -1,6 +1,6 @@
 <template>
   <main class="content">
-    <h1>Bienvenue, {{ user.name }} 👋</h1>
+    <h1>Bienvenue, {{ user.name }}</h1>
 
     <div class="profile-container">
       <section class="profile">
@@ -104,86 +104,105 @@ onMounted(fetchUser)
 
 <style scoped>
 .content {
-  padding: 40px;
-  background: #f7f8fc;
+  min-height: 100vh;
+  background: #1a1a1a;
+  color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
 .content h1 {
-  font-size: 2rem;
-  margin-bottom: 30px;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: white;
+  text-align: center;
 }
 
 .profile-container {
   display: flex;
-  gap: 30px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
 }
 
-.profile {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  flex: 1;
+.profile,
+.edit-form {
+  background: #2c2c2c;
+  color: #f1f1f1;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  width: 100%;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
 .edit-btn {
-  background: none;
+  background: #3668E8;
   border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
   cursor: pointer;
-  font-size: 18px;
+  color: #1a1a1a;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+.edit-btn:hover {
+  background: #3668E8;
 }
 
 .profile ul {
   list-style: none;
   padding: 0;
 }
-
 .profile li {
-  margin-bottom: 10px;
-}
-
-.edit-form {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  flex: 1;
+  margin-bottom: 0.75rem;
 }
 
 .edit-form h3 {
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
+  color: white;
 }
 
 .edit-form label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 }
 
 .edit-form input,
 .edit-form select {
   width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: none;
+  background: #444;
+  color: white;
 }
 
 .save-btn {
-  margin-top: 10px;
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #3668E8;
+  color: #1a1a1a;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+.save-btn:hover {
+  background-color: #3668E8;
 }
 </style>
+

@@ -112,14 +112,62 @@ onMounted(async () => {
 })
 </script>
 
-
-
-
 <style scoped>
+.calendar-wrapper {
+  background-color: #1e1e1e;
+  color: white;
+  padding: 2rem;
+  margin: 2rem auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+  max-width: 100%;
+  width: 100%;
+}
+
+.custom-calendar :deep(.fc) {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #1e1e1e;
+  color: white;
+  border: none;
+}
+
+.custom-calendar :deep(.fc-toolbar-title) {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.custom-calendar :deep(.fc-button) {
+  background-color: #3668E8;
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+}
+
+.custom-calendar :deep(.fc-button:hover),
+.custom-calendar :deep(.fc-button:focus) {
+  background-color: #3668E8;
+}
+
+.custom-calendar :deep(.fc-daygrid-day-number) {
+  color: #aaa;
+}
+
+.custom-calendar :deep(.fc-event) {
+  background-color: #3668E8;
+  color: white;
+  border: none;
+  padding: 2px 4px;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -127,60 +175,21 @@ onMounted(async () => {
 }
 
 .modal-content {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
-  z-index: 1001;
-}
-
-.calendar-wrapper {
-  max-width: 100%; /* au lieu de 800px */
-  width: 100%;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #f9f9f9;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.custom-calendar :deep(.fc) {
-  font-size: 14px;
-}
-
-.custom-calendar :deep(.fc-toolbar-title) {
-  font-size: 1.25rem;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-}
-
-.modal-content {
-  background: white;
+  background-color: #121212;
+  color: white;
   padding: 2rem;
   border-radius: 12px;
   width: 90%;
   max-width: 500px;
   position: relative;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
 }
 
 .modal-title {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: bold;
   margin-bottom: 1rem;
+  color: #3668E8;
 }
 
 .close-button {
@@ -190,12 +199,12 @@ onMounted(async () => {
   background: none;
   border: none;
   font-size: 1.25rem;
-  color: #888;
+  color: #aaa;
   cursor: pointer;
 }
 
 .close-button:hover {
-  color: #e53e3e;
+  color: #3668E8;
 }
 
 .modal-actions {
@@ -205,16 +214,17 @@ onMounted(async () => {
 }
 
 .btn-link {
-  background-color: #2563eb;
-  color: white;
+  background-color: #3668E8;
+  color: black;
   padding: 0.5rem 1rem;
   border-radius: 8px;
   text-decoration: none;
+  font-weight: bold;
   transition: background 0.2s ease;
 }
 
 .btn-link:hover {
-  background-color: #1e40af;
+  background-color: #3668E8;
 }
-
 </style>
+

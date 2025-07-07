@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User;
 use App\Entity\Seance;
-use App\Entity\ProgrammeJour;
 use App\Entity\ProgrammeExercice;
 
 #[ORM\Entity(repositoryClass: ProgrammeRepository::class)]
@@ -34,9 +33,6 @@ class Programme
     #[Groups(['programme:read', 'programme:write'])]
     private Collection $programmeExercices;
 
-    #[ORM\OneToMany(mappedBy: 'programme', targetEntity: ProgrammeJour::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection $jours;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'programmes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['programme:read', 'programme:write'])]
@@ -47,7 +43,6 @@ class Programme
 
     public function __construct()
     {
-        $this->jours = new ArrayCollection();
         $this->seances = new ArrayCollection();
         $this->programmeExercices = new ArrayCollection();
     }
@@ -96,29 +91,7 @@ class Programme
         return $this;
     }
 
-    public function getJours(): Collection
-    {
-        return $this->jours;
-    }
 
-    public function addJour(ProgrammeJour $jour): static
-    {
-        if (!$this->jours->contains($jour)) {
-            $this->jours->add($jour);
-            $jour->setProgramme($this);
-        }
-        return $this;
-    }
-
-    public function removeJour(ProgrammeJour $jour): static
-    {
-        if ($this->jours->removeElement($jour)) {
-            if ($jour->getProgramme() === $this) {
-                $jour->setProgramme(null);
-            }
-        }
-        return $this;
-    }
 
     public function getUser(): ?User
     {

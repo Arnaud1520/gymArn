@@ -1,5 +1,6 @@
 <template>
-  <div v-if="programme">
+  
+  <div v-if="programme" class="programme-page">
     <h1>{{ programme.name }}</h1>
 
     <button @click="isEditing = !isEditing" class="btn-edit">
@@ -42,6 +43,7 @@
 <script>
 import axios from 'axios'
 
+
 export default {
   data() {
     return {
@@ -70,7 +72,6 @@ export default {
       const resExos = await axios.get(`http://localhost:8000/api/exercices`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      console.log('Liste des exercices récupérés :', resExos.data)
       this.exercices = resExos.data.member
     } catch (err) {
       console.error('Erreur chargement :', err.response?.data || err)
@@ -86,43 +87,84 @@ export default {
       this.programme.programmeExercices.splice(index, 1)
     },
     async submitUpdate() {
-  const token = localStorage.getItem('token')
-  const id = this.programme.id
+      const token = localStorage.getItem('token')
+      const id = this.programme.id
 
-  // Prépare les exercices en envoyant l'IRI dans 'exercice'
-  const preparedProgrammeExercices = this.programme.programmeExercices.map(item => ({
-    id: item.id,
-    exercice: typeof item.exercice === 'string' ? item.exercice : item.exercice['@id'], // juste l'IRI
-    series: item.series,
-    repetitions: item.repetitions,
-    poids: item.poids,
-  }))
+      const preparedProgrammeExercices = this.programme.programmeExercices.map(item => ({
+        id: item.id,
+        exercice: typeof item.exercice === 'string' ? item.exercice : item.exercice['@id'],
+        series: item.series,
+        repetitions: item.repetitions,
+        poids: item.poids,
+      }))
 
-  try {
-    await axios.patch(
-      `http://localhost:8000/api/programmes/${id}`,
-      {
-        programmeExercices: preparedProgrammeExercices,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/merge-patch+json',
-        },
+      try {
+        await axios.patch(
+          `http://localhost:8000/api/programmes/${id}`,
+          { programmeExercices: preparedProgrammeExercices },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/merge-patch+json',
+            },
+          }
+        )
+        this.isEditing = false
+        alert('Modifications enregistrées !')
+      } catch (err) {
+        console.error('Erreur mise à jour :', err.response?.data || err)
       }
-    )
-    this.isEditing = false
-    alert('Modifications enregistrées !')
-  } catch (err) {
-    console.error('Erreur mise à jour :', err.response?.data || err)
-  }
+    },
   },
-},
 }
 </script>
 
 <style scoped>
-/* Ajout des styles des nouveaux boutons */
+.programme-page {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  padding: 20px;
+  max-width: 900px;
+  margin: 30px auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #34495e;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+li {
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+li h3 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  color: #2d3e50;
+}
+
+li p {
+  margin: 4px 0;
+  font-size: 15px;
+  color: #555;
+}
+
 .btn-edit,
 .btn-add,
 .btn-remove,
@@ -130,39 +172,59 @@ export default {
   background-color: #3498db;
   color: white;
   border: none;
-  padding: 8px 14px;
-  margin: 10px 5px;
+  padding: 10px 16px;
+  margin: 12px 6px 0 0;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
 .btn-edit:hover,
 .btn-add:hover,
-.btn-remove:hover,
 .btn-save:hover {
   background-color: #2980b9;
 }
+
 .btn-remove {
   background-color: #e74c3c;
+  margin-top: 10px;
 }
+
 .btn-remove:hover {
   background-color: #c0392b;
 }
+
 .edit-form {
   margin-top: 30px;
-  background-color: #ffffff;
   padding: 20px;
+  background-color: #ecf0f1;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(44, 62, 80, 0.1);
+  border: 1px solid #ccc;
 }
+
+.edit-form h3 {
+  margin-bottom: 15px;
+  font-size: 22px;
+  color: #2c3e50;
+}
+
 .edit-form input,
 .edit-form select {
   display: block;
   width: 100%;
   margin-bottom: 12px;
-  padding: 8px;
+  padding: 10px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #bdc3c7;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+div > p {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  margin-top: 40px;
 }
 </style>

@@ -4,7 +4,6 @@
     <DashboardProfile />
     <SeanceCalendar />
 
-    <!-- ✅ Flex horizontal entre Programme et Exercices -->
     <div class="programme-exercice">
       <Programmes />
       <Exercices />
@@ -18,15 +17,13 @@
 import axios from 'axios'
 import { onMounted } from 'vue'
 
-// ✅ Composants
 import DashboardProfile from '@/components/Dashboard/DashboardProfile.vue'
 import Exercices from '@/components/Dashboard/Exercice.vue'
 import Programmes from '@/components/Dashboard/Programme.vue'
 import SeanceCalendar from '@/components/Dashboard/SeanceCalendar.vue'
-import FooterSection from '@/components/FooterSection.vue'; // ✅ Ajout manquant
+import FooterSection from '@/components/FooterSection.vue'
 import HeaderSection from '@/components/HeaderSection.vue'
 
-// 🔒 Vérification de la connexion
 onMounted(async () => {
   const token = localStorage.getItem('token')
 
@@ -50,22 +47,38 @@ onMounted(async () => {
 
 <style scoped>
 .dashboard {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: white;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  padding-top: 80px; /* pour ne pas cacher le haut sous le header fixe */
 }
 
-/* ✅ Mise en page côte à côte */
+/* Style flex entre Programmes et Exercices */
 .programme-exercice {
   display: flex;
+  flex-wrap: wrap;
   gap: 2rem;
-  padding: 1rem;
+  padding: 20px 40px;
   justify-content: space-between;
 }
 
-/* Optionnel : tu peux forcer une taille sur les composants */
+/* Pour adapter l'affichage responsive */
 .programme-exercice > * {
-  flex: 1;
+  flex: 1 1 45%;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  border-left: 5px solid #FFD600;
+}
+
+@media (max-width: 768px) {
+  .programme-exercice {
+    flex-direction: column;
+  }
 }
 </style>

@@ -1,4 +1,5 @@
 <template>
+  <HeaderSection />
   <div class="form-container">
     <h2>Créer un programme</h2>
 
@@ -61,6 +62,7 @@
 </template>
 
 <script setup>
+import HeaderSection from '@/components/HeaderSection.vue'
 import axios from 'axios'
 import { onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -164,7 +166,7 @@ console.log('payload:', payload)
 .form-container {
   max-width: 700px;
   margin: auto;
-  padding: 2rem;
+  padding: 9rem 2rem 2rem;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);

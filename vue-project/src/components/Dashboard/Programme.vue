@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2 class="title">Liste des séances</h2>
+    <h2 class="title">Liste des programmes</h2>
 
     <div class="button-group">
       <button @click="toggleForm" class="add-btn">
@@ -392,5 +392,52 @@ function prevPage() {
 .pagination button:disabled {
   background-color: #93c5fd;
   cursor: not-allowed;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #1e293b; /* bleu très foncé (dark slate blue) */
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Titre principal */
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white; /* texte en blanc */
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Tableau - en-tête et lignes */
+.programme-table thead {
+  background-color: #334155; /* un bleu-gris foncé */
+}
+
+.programme-table th,
+.programme-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #475569;
+  color: white; /* texte en blanc */
+}
+
+.programme-table tr:hover {
+  background-color: #475569; /* hover plus clair */
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Boutons - tu peux garder tes couleurs existantes */
+.add-btn {
+  background-color: #10b981;
+  color: white;
+  /* ... */
+}
+
+.add-btn.secondary {
+  background-color: #3b82f6;
 }
 </style>
