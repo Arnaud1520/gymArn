@@ -1,7 +1,6 @@
 <?php
 
 use App\Kernel;
-echo 'PORT='.getenv('PORT');
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
